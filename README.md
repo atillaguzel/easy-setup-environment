@@ -29,3 +29,7 @@ Uninstall package:
 ```
 python -m pip uninstall <PACKAGE_NAME>
 ```
+
+## Links 
+
+https://docs.anaconda.com/anaconda/packages/py3.7_osx-64/
