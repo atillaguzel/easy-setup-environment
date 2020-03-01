@@ -20,3 +20,4 @@ arrow==0.15.5
 # server
 hug==2.6.1
 Flask==1.1.1
+# https://docs.anaconda.com/anaconda/packages/py3.7_osx-64/
