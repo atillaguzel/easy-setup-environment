@@ -2,7 +2,7 @@
 
 Tools to speed up setting environment from scratch
 
-## Pip - Overview
+## Pip - Configuration
 
 
 Install multiple packages:
@@ -30,6 +30,18 @@ Uninstall package:
 python -m pip uninstall <PACKAGE_NAME>
 ```
 
-## Links 
+## Zsh - Configuration
+
+Install homebrew cask fontSize
+```
+$ brew tap homebrew/cask-fonts                  # you only have to do this once!
+$ brew cask install font-meslo-nerd-font
+```
+
+## Links
 
 https://docs.anaconda.com/anaconda/packages/py3.7_osx-64/
+https://www.robertcooper.me/elegant-development-experience-with-zsh-and-hyper-
+https://hyper.is/
+https://denysdovhan.com/spaceship-prompt/#features
+https://github.com/pbomb/hyper-night-owl
