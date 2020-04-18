@@ -40,8 +40,8 @@ $ brew cask install font-meslo-nerd-font
 
 ## Links
 
-https://docs.anaconda.com/anaconda/packages/py3.7_osx-64/
-https://www.robertcooper.me/elegant-development-experience-with-zsh-and-hyper-
-https://hyper.is/
-https://denysdovhan.com/spaceship-prompt/#features
-https://github.com/pbomb/hyper-night-owl
+- [Anaconda](https://docs.anaconda.com/anaconda/packages/py3.7_osx-64/)
+- [Elegant theme dev experience with zsh and hyper](https://www.robertcooper.me/elegant-development-experience-with-zsh-and-hyper-)
+- [Hyper](https://hyper.is/)
+- [Spaceship-prompt](https://denysdovhan.com/spaceship-prompt/#features)
+- [Hyper night owl theme](https://github.com/pbomb/hyper-night-owl)
