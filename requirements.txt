@@ -13,7 +13,7 @@ jupyter==1.0.0
 jupyterlab==2.0.0
 # mnachine learning
 scikit-learn==0.22.2
-tensorflow==2.1.0
+tensorflow==2.1.2
 spacy==2.2.3
 torch==1.4.0
 torchvision==0.5.0
