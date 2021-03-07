@@ -51,13 +51,10 @@ alias goto_sandbox="cd '/Users/think/projects/sandbox/'"
 
 
 
-
-
 #------------------
 # PATH Manipulations
 #------------------
 
-# export PATH=/Users/think/Library/Python/3.7/bin:$PATH
 
 # Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
 export PATH=/opt/homebrew/bin:$PATH
