@@ -64,6 +64,20 @@ $ brew cask install font-meslo-nerd-font
 
 </br>
 
+## Jupyter Lab - Configuration
+
+Runing Jupyter Lab as a desktop application is simple. Generate jupyter lab configuration if you haven't done before.
+```command
+jupyter lab --generate-config
+```
+
+Add the line below to your configuration file located here `~/.jupyter/jupyter_notebook_config.py`:
+```
+c.LabApp.browser = '/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --app=%s'
+```
+
+</br>
+
 ## Links
 
 - [Installing Conda on macOS](https://docs.anaconda.com/anaconda/install/mac-os/)
