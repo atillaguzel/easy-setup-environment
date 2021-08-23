@@ -10,7 +10,7 @@ plotly==4.14.3
 seaborn==0.11.1
 # notebook
 jupyter==1.0.0
-jupyterlab==3.0.7
+jupyterlab==3.0.17
 # mnachine learning
 scikit-learn==0.24.1
 tensorflow==2.4.1
