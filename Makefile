@@ -11,9 +11,9 @@
 # ║                                                                            ║
 # ╚══════════════════════════════════════════════════════════════════════════════╝
 
-.PHONY: all brew python node starship nerd-fonts gcloud gh docker tailwindcss \
-        gemini-cli claude-code codex-cli tailscale zsh-config shell-extras \
-        status clean help
+.PHONY: all brew python node starship starship-config nerd-fonts gcloud gh \
+        docker tailwindcss gemini-cli claude-code codex-cli tailscale \
+        zsh-config shell-extras status clean help
 
 SHELL := /bin/bash
 .SHELLFLAGS := -euo pipefail -c
@@ -198,7 +198,10 @@ starship:
 		fi; \
 		$(call log_ok,"Starship installed"); \
 	fi
-	@# Copy config
+
+# ── Starship Config (optional — run: make starship-config) ─────────────────────
+starship-config: starship
+	@printf "\n$(BOLD)── Starship Custom Config ──────────────────────────────────$(RESET)\n"
 	@mkdir -p "$$HOME/.config"
 	@cp -f starship.toml "$$HOME/.config/starship.toml"
 	@$(call log_ok,"Starship config deployed to ~/.config/starship.toml")
@@ -478,7 +481,8 @@ help:
 	@printf "  $(CYAN)make brew$(RESET)           Install Homebrew\n"
 	@printf "  $(CYAN)make python$(RESET)         Install uv + Python 3.11–3.14\n"
 	@printf "  $(CYAN)make node$(RESET)           Install nvm + Node LTS + pnpm + bun\n"
-	@printf "  $(CYAN)make starship$(RESET)       Install Starship prompt + config\n"
+	@printf "  $(CYAN)make starship$(RESET)       Install Starship prompt\n"
+	@printf "  $(CYAN)make starship-config$(RESET) Deploy custom Starship theme (optional)\n"
 	@printf "  $(CYAN)make nerd-fonts$(RESET)     Install Nerd Fonts\n"
 	@printf "  $(CYAN)make gcloud$(RESET)         Install Google Cloud SDK\n"
 	@printf "  $(CYAN)make gh$(RESET)             Install GitHub CLI\n"
