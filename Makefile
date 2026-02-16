@@ -11,7 +11,7 @@
 # ║                                                                            ║
 # ╚══════════════════════════════════════════════════════════════════════════════╝
 
-.PHONY: all brew python node starship nerd-fonts gcloud gh docker tailwindcss \
+.PHONY: all brew python node starship nerd-fonts nerd-fonts-force gcloud gh docker tailwindcss \
         gemini-cli claude-code codex-cli tailscale zsh-config shell-extras \
         status clean help
 
@@ -213,43 +213,46 @@ starship:
 # ── Nerd Fonts ──────────────────────────────────────────────────────────────────
 # ═════════════════════════════════════════════════════════════════════════════════
 NERD_FONTS := FiraCode JetBrainsMono Meslo
+NERD_FONTS_URL := https://github.com/ryanoasis/nerd-fonts/releases/latest/download
 
-# Homebrew cask names don't follow simple lowercase — map them explicitly
-CASK_FiraCode       := font-fira-code-nerd-font
-CASK_JetBrainsMono  := font-jetbrains-mono-nerd-font
-CASK_Meslo          := font-meslo-lg-nerd-font
+ifeq ($(OS),macos)
+    FONT_DIR := $(HOME)/Library/Fonts
+else
+    FONT_DIR := $(HOME)/.local/share/fonts
+endif
 
 nerd-fonts:
 	@printf "\n$(BOLD)── Nerd Fonts ──────────────────────────────────────────────$(RESET)\n"
-ifeq ($(OS),macos)
+	@mkdir -p "$(FONT_DIR)"
 	@for font in $(NERD_FONTS); do \
-		cask=""; \
-		case "$$font" in \
-			FiraCode)       cask="$(CASK_FiraCode)";; \
-			JetBrainsMono)  cask="$(CASK_JetBrainsMono)";; \
-			Meslo)          cask="$(CASK_Meslo)";; \
-		esac; \
-		if brew list --cask "$$cask" &>/dev/null 2>&1; then \
+		if ls "$(FONT_DIR)"/$$font*.ttf >/dev/null 2>&1; then \
 			printf "$(GREEN)$(BOLD)✓ $(RESET) $$font Nerd Font already installed\n"; \
 		else \
 			printf "$(CYAN)$(BOLD)⬇ $(RESET)$(CYAN) Installing $$font Nerd Font...$(RESET)\n"; \
-			brew install --cask "$$cask"; \
+			TMPDIR=$$(mktemp -d); \
+			curl -fsSL -o "$$TMPDIR/$$font.tar.xz" \
+				"$(NERD_FONTS_URL)/$$font.tar.xz"; \
+			tar -xf "$$TMPDIR/$$font.tar.xz" -C "$(FONT_DIR)"; \
+			rm -rf "$$TMPDIR"; \
 			printf "$(GREEN)$(BOLD)✓ $(RESET)$(GREEN) $$font Nerd Font installed$(RESET)\n"; \
 		fi; \
 	done
-	@# Refresh macOS font cache so Terminal.app picks up new fonts immediately
+ifeq ($(OS),macos)
+	@# Refresh macOS font cache
 	@printf "$(CYAN)$(BOLD)ℹ $(RESET)$(CYAN) Refreshing macOS font cache...$(RESET)\n"
 	@sudo atsutil databases -remove 2>/dev/null || true
 	@atsutil server -shutdown 2>/dev/null || true
 	@atsutil server -ping 2>/dev/null || true
 	@sleep 1
 	@$(call log_ok,"Font cache refreshed")
-	@# Auto-configure Terminal.app to use FiraCode Nerd Font
-	@printf "$(CYAN)$(BOLD)ℹ $(RESET)$(CYAN) Configuring Terminal.app font...$(RESET)\n"
+	@# Auto-configure Terminal.app font
 	@osascript -e ' \
 		tell application "Terminal" \
-			set fontName to "FiraCodeNerdFontComplete-Retina" \
+			set fontName to "FiraCodeNerdFontMono-Retina" \
 			set fontSize to 13 \
+			set default settings to settings set "Basic" \
+			set font name of settings set "Basic" to fontName \
+			set font size of settings set "Basic" to fontSize \
 			repeat with w in windows \
 				repeat with t in tabs of w \
 					set font name of t to fontName \
@@ -258,28 +261,21 @@ ifeq ($(OS),macos)
 			end repeat \
 		end tell \
 	' 2>/dev/null || true
-	@$(call log_ok,"Terminal.app font set to FiraCode Nerd Font Ret 13")
-	@printf "$(YELLOW)$(BOLD)⚠ $(RESET)$(YELLOW) If font still missing: open Font Book → search 'FiraCode Nerd' → right-click → Validate$(RESET)\n"
-	@printf "$(YELLOW)$(BOLD)⚠ $(RESET)$(YELLOW) To make it permanent: Terminal → Settings → Profiles → Text → Change → search 'FiraCode Nerd'$(RESET)\n"
+	@$(call log_ok,"Terminal.app font set to FiraCode Nerd Font Mono Retina 13")
 else
-	@FONT_DIR="$$HOME/.local/share/fonts"; \
-	mkdir -p "$$FONT_DIR"; \
-	for font in $(NERD_FONTS); do \
-		if ls "$$FONT_DIR"/$$font*.ttf &>/dev/null 2>&1 || fc-list | grep -qi "$$font" 2>/dev/null; then \
-			printf "$(GREEN)$(BOLD)✓ $(RESET) $$font Nerd Font already installed\n"; \
-		else \
-			printf "$(CYAN)$(BOLD)⬇ $(RESET)$(CYAN) Installing $$font Nerd Font...$(RESET)\n"; \
-			TMPDIR=$$(mktemp -d); \
-			curl -fsSL -o "$$TMPDIR/$$font.tar.xz" \
-				"https://github.com/ryanoasis/nerd-fonts/releases/latest/download/$$font.tar.xz"; \
-			tar -xf "$$TMPDIR/$$font.tar.xz" -C "$$FONT_DIR"; \
-			rm -rf "$$TMPDIR"; \
-			printf "$(GREEN)$(BOLD)✓ $(RESET)$(GREEN) $$font Nerd Font installed$(RESET)\n"; \
-		fi; \
-	done; \
-	fc-cache -fv &>/dev/null; \
+	@fc-cache -fv >/dev/null 2>&1; \
 	$(call log_ok,"Font cache updated")
 endif
+	@printf "$(YELLOW)$(BOLD)⚠ $(RESET)$(YELLOW) Restart Terminal.app for fonts to take effect$(RESET)\n"
+
+nerd-fonts-force:
+	@printf "\n$(BOLD)── Nerd Fonts (Force Reinstall) ─────────────────────────────$(RESET)\n"
+	@printf "$(YELLOW)$(BOLD)⚠ $(RESET)$(YELLOW) Removing existing Nerd Font files...$(RESET)\n"
+	@for font in $(NERD_FONTS); do \
+		rm -f "$(FONT_DIR)"/$$font*.ttf "$(FONT_DIR)"/$$font*.otf 2>/dev/null; \
+		printf "$(RED)$(BOLD)✗ $(RESET) Removed $$font Nerd Font files\n"; \
+	done
+	@$(MAKE) nerd-fonts
 
 # ═════════════════════════════════════════════════════════════════════════════════
 # ── Google Cloud SDK ────────────────────────────────────────────────────────────
