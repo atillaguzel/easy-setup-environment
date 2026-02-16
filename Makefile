@@ -48,6 +48,9 @@ else
     $(error Unsupported OS: $(UNAME_S). Only macOS and Linux are supported.)
 endif
 
+# ── Ensure Homebrew is on PATH for all recipes ────────────────────────────────
+export PATH := $(BREW_PREFIX)/bin:$(BREW_PREFIX)/sbin:$(PATH)
+
 # ── Helper Functions ────────────────────────────────────────────────────────────
 define log_info
 	@printf "$(BLUE)$(BOLD)ℹ $(RESET)$(BLUE) %s$(RESET)\n" $(1)
