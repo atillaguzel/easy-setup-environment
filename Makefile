@@ -12,7 +12,7 @@
 # ╚══════════════════════════════════════════════════════════════════════════════╝
 
 .PHONY: all brew python node starship nerd-fonts gcloud gh docker tailwindcss \
-        gemini-cli antigravity codex-cli tailscale zsh-config shell-extras \
+        gemini-cli claude-code codex-cli tailscale zsh-config shell-extras \
         status clean help
 
 SHELL := /bin/bash
@@ -74,7 +74,7 @@ endef
 
 # ── Default Target ──────────────────────────────────────────────────────────────
 all: banner brew python node starship nerd-fonts gcloud gh docker tailwindcss \
-     gemini-cli antigravity codex-cli tailscale shell-extras zsh-config status
+     gemini-cli claude-code codex-cli tailscale shell-extras zsh-config status
 	@printf "\n$(GREEN)$(BOLD)══════════════════════════════════════════════════════════════$(RESET)\n"
 	@printf "$(GREEN)$(BOLD)  🎉  All done! Restart your terminal or run: source ~/.zshrc  $(RESET)\n"
 	@printf "$(GREEN)$(BOLD)══════════════════════════════════════════════════════════════$(RESET)\n\n"
@@ -334,16 +334,16 @@ gemini-cli:
 		$(call log_ok,"Gemini CLI installed"); \
 	fi
 
-antigravity:
-	@printf "\n$(BOLD)── Antigravity ─────────────────────────────────────────────$(RESET)\n"
+claude-code:
+	@printf "\n$(BOLD)── Claude Code (Anthropic) ─────────────────────────────────$(RESET)\n"
 	@export NVM_DIR="$$HOME/.nvm"; \
 	[ -s "$$NVM_DIR/nvm.sh" ] && . "$$NVM_DIR/nvm.sh"; \
-	if command -v antigravity &>/dev/null; then \
-		$(call log_skip,"Antigravity"); \
+	if command -v claude &>/dev/null; then \
+		$(call log_skip,"Claude Code"); \
 	else \
-		$(call log_install,"Antigravity"); \
-		npm install -g @anthropic-ai/antigravity; \
-		$(call log_ok,"Antigravity installed"); \
+		$(call log_install,"Claude Code"); \
+		npm install -g @anthropic-ai/claude-code; \
+		$(call log_ok,"Claude Code installed"); \
 	fi
 
 codex-cli:
@@ -470,7 +470,7 @@ status:
 	\
 	printf "$(BOLD)║  ── AI Coding Tools ─────────────────────────────────────── ║$(RESET)\n"; \
 	_check "gemini"      "$$(gemini --version 2>/dev/null | head -1 || true)"; \
-	_check "antigravity" "$$(antigravity --version 2>/dev/null | head -1 || true)"; \
+	_check "claude"       "$$(claude --version 2>/dev/null | head -1 || true)"; \
 	_check "codex"       "$$(codex --version 2>/dev/null | head -1 | awk '{print $$NF}' || true)"; \
 	\
 	printf "$(BOLD)║  ── Shell & Prompt ──────────────────────────────────────── ║$(RESET)\n"; \
@@ -504,7 +504,7 @@ help:
 	@printf "  $(CYAN)make docker$(RESET)         Install Docker\n"
 	@printf "  $(CYAN)make tailwindcss$(RESET)    Install Tailwind CSS CLI\n"
 	@printf "  $(CYAN)make gemini-cli$(RESET)     Install Gemini CLI\n"
-	@printf "  $(CYAN)make antigravity$(RESET)    Install Antigravity\n"
+	@printf "  $(CYAN)make claude-code$(RESET)   Install Claude Code (Anthropic)\n"
 	@printf "  $(CYAN)make codex-cli$(RESET)      Install Codex CLI\n"
 	@printf "  $(CYAN)make tailscale$(RESET)      Install Tailscale\n"
 	@printf "  $(CYAN)make shell-extras$(RESET)   Install CLI productivity tools\n"
