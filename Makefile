@@ -208,15 +208,26 @@ starship:
 # ═════════════════════════════════════════════════════════════════════════════════
 NERD_FONTS := FiraCode JetBrainsMono Meslo
 
+# Homebrew cask names don't follow simple lowercase — map them explicitly
+CASK_FiraCode       := font-fira-code-nerd-font
+CASK_JetBrainsMono  := font-jetbrains-mono-nerd-font
+CASK_Meslo          := font-meslo-lg-nerd-font
+
 nerd-fonts:
 	@printf "\n$(BOLD)── Nerd Fonts ──────────────────────────────────────────────$(RESET)\n"
 ifeq ($(OS),macos)
 	@for font in $(NERD_FONTS); do \
-		if brew list --cask "font-$$(echo $$font | tr '[:upper:]' '[:lower:]')-nerd-font" &>/dev/null 2>&1; then \
+		cask=""; \
+		case "$$font" in \
+			FiraCode)       cask="$(CASK_FiraCode)";; \
+			JetBrainsMono)  cask="$(CASK_JetBrainsMono)";; \
+			Meslo)          cask="$(CASK_Meslo)";; \
+		esac; \
+		if brew list --cask "$$cask" &>/dev/null 2>&1; then \
 			printf "$(GREEN)$(BOLD)✓ $(RESET) $$font Nerd Font already installed\n"; \
 		else \
 			printf "$(CYAN)$(BOLD)⬇ $(RESET)$(CYAN) Installing $$font Nerd Font...$(RESET)\n"; \
-			brew install --cask "font-$$(echo $$font | tr '[:upper:]' '[:lower:]')-nerd-font"; \
+			brew install --cask "$$cask"; \
 			printf "$(GREEN)$(BOLD)✓ $(RESET)$(GREEN) $$font Nerd Font installed$(RESET)\n"; \
 		fi; \
 	done
