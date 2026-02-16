@@ -442,16 +442,20 @@ status:
 	@printf "$(BOLD)╠══════════════════════════════════════════════════════════════╣$(RESET)\n"
 	@printf "$(BOLD)║  %-20s │ %-10s │ %-22s ║$(RESET)\n" "Tool" "Status" "Version"
 	@printf "$(BOLD)╠══════════════════════════════════════════════════════════════╣$(RESET)\n"
-	@# Helper function to check status
+	@# Helper: truncate version to 22 chars max and display status row
 	@_check() { \
 		local name="$$1"; \
-		local ver="$$2"; \
+		local ver="$$(echo "$$2" | cut -c1-22)"; \
 		if [ -n "$$ver" ]; then \
 			printf "$(BOLD)║$(RESET)  %-20s │ $(GREEN)%-10s$(RESET) │ %-22s $(BOLD)║$(RESET)\n" "$$name" "  ✓" "$$ver"; \
 		else \
 			printf "$(BOLD)║$(RESET)  %-20s │ $(RED)%-10s$(RESET) │ %-22s $(BOLD)║$(RESET)\n" "$$name" "  ✗" "not found"; \
 		fi; \
 	}; \
+	\
+	# Load nvm so node/pnpm/bun and npm-installed tools are found \
+	export NVM_DIR="$$HOME/.nvm"; \
+	[ -s "$$NVM_DIR/nvm.sh" ] && . "$$NVM_DIR/nvm.sh"; \
 	\
 	printf "$(BOLD)║  ── Core ────────────────────────────────────────────────── ║$(RESET)\n"; \
 	_check "brew"    "$$(brew --version 2>/dev/null | head -1 | cut -d' ' -f2 || true)"; \
@@ -481,7 +485,7 @@ status:
 	_check "eza"      "$$(eza --version 2>/dev/null | head -1 | awk '{print $$2}' || true)"; \
 	_check "zoxide"   "$$(zoxide --version 2>/dev/null | awk '{print $$2}' || true)"; \
 	_check "tmux"     "$$(tmux -V 2>/dev/null | awk '{print $$2}' || true)"; \
-	_check "lazygit"  "$$(lazygit --version 2>/dev/null | head -1 || true)"; \
+	_check "lazygit"  "$$(lazygit --version 2>/dev/null | sed -n 's/.*version=\([^,]*\).*/\1/p' || true)"; \
 	_check "jq"       "$$(jq --version 2>/dev/null | tr -d 'jq-' || true)"; \
 	_check "direnv"   "$$(direnv --version 2>/dev/null || true)"; \
 	\
