@@ -202,6 +202,12 @@ starship:
 	@mkdir -p "$$HOME/.config"
 	@cp -f starship.toml "$$HOME/.config/starship.toml"
 	@$(call log_ok,"Starship config deployed to ~/.config/starship.toml")
+	@# Download official Nerd Font symbols and merge into config
+	@printf "$(CYAN)$(BOLD)⬇ $(RESET)$(CYAN) Downloading Nerd Font symbols preset...$(RESET)\n"
+	@curl -fsSL https://starship.rs/presets/toml/nerd-font-symbols.toml > /tmp/nerd-font-symbols.toml
+	@python3 scripts/merge-starship-symbols.py "$$HOME/.config/starship.toml" /tmp/nerd-font-symbols.toml
+	@rm -f /tmp/nerd-font-symbols.toml
+	@$(call log_ok,"Nerd Font symbols merged into Starship config")
 
 # ═════════════════════════════════════════════════════════════════════════════════
 # ── Nerd Fonts ──────────────────────────────────────────────────────────────────
