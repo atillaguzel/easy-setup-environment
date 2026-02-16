@@ -231,6 +231,30 @@ ifeq ($(OS),macos)
 			printf "$(GREEN)$(BOLD)✓ $(RESET)$(GREEN) $$font Nerd Font installed$(RESET)\n"; \
 		fi; \
 	done
+	@# Refresh macOS font cache so Terminal.app picks up new fonts immediately
+	@printf "$(CYAN)$(BOLD)ℹ $(RESET)$(CYAN) Refreshing macOS font cache...$(RESET)\n"
+	@sudo atsutil databases -remove 2>/dev/null || true
+	@atsutil server -shutdown 2>/dev/null || true
+	@atsutil server -ping 2>/dev/null || true
+	@sleep 1
+	@$(call log_ok,"Font cache refreshed")
+	@# Auto-configure Terminal.app to use FiraCode Nerd Font
+	@printf "$(CYAN)$(BOLD)ℹ $(RESET)$(CYAN) Configuring Terminal.app font...$(RESET)\n"
+	@osascript -e ' \
+		tell application "Terminal" \
+			set fontName to "FiraCodeNerdFontComplete-Retina" \
+			set fontSize to 13 \
+			repeat with w in windows \
+				repeat with t in tabs of w \
+					set font name of t to fontName \
+					set font size of t to fontSize \
+				end repeat \
+			end repeat \
+		end tell \
+	' 2>/dev/null || true
+	@$(call log_ok,"Terminal.app font set to FiraCode Nerd Font Ret 13")
+	@printf "$(YELLOW)$(BOLD)⚠ $(RESET)$(YELLOW) If font still missing: open Font Book → search 'FiraCode Nerd' → right-click → Validate$(RESET)\n"
+	@printf "$(YELLOW)$(BOLD)⚠ $(RESET)$(YELLOW) To make it permanent: Terminal → Settings → Profiles → Text → Change → search 'FiraCode Nerd'$(RESET)\n"
 else
 	@FONT_DIR="$$HOME/.local/share/fonts"; \
 	mkdir -p "$$FONT_DIR"; \
