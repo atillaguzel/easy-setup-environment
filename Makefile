@@ -53,23 +53,23 @@ export PATH := $(BREW_PREFIX)/bin:$(BREW_PREFIX)/sbin:$(PATH)
 
 # ── Helper Functions ────────────────────────────────────────────────────────────
 define log_info
-	@printf "$(BLUE)$(BOLD)ℹ $(RESET)$(BLUE) %s$(RESET)\n" $(1)
+	printf "$(BLUE)$(BOLD)ℹ $(RESET)$(BLUE) %s$(RESET)\n" $(1)
 endef
 
 define log_ok
-	@printf "$(GREEN)$(BOLD)✓ $(RESET)$(GREEN) %s$(RESET)\n" $(1)
+	printf "$(GREEN)$(BOLD)✓ $(RESET)$(GREEN) %s$(RESET)\n" $(1)
 endef
 
 define log_warn
-	@printf "$(YELLOW)$(BOLD)⚠ $(RESET)$(YELLOW) %s$(RESET)\n" $(1)
+	printf "$(YELLOW)$(BOLD)⚠ $(RESET)$(YELLOW) %s$(RESET)\n" $(1)
 endef
 
 define log_install
-	@printf "$(CYAN)$(BOLD)⬇ $(RESET)$(CYAN) Installing %s...$(RESET)\n" $(1)
+	printf "$(CYAN)$(BOLD)⬇ $(RESET)$(CYAN) Installing %s...$(RESET)\n" $(1)
 endef
 
 define log_skip
-	@printf "$(GREEN)$(BOLD)✓ $(RESET) %s already installed$(RESET)\n" $(1)
+	printf "$(GREEN)$(BOLD)✓ $(RESET) %s already installed$(RESET)\n" $(1)
 endef
 
 # ── Default Target ──────────────────────────────────────────────────────────────
